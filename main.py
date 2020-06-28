@@ -1,5 +1,9 @@
 import argparse
 import logging
+import csv
+from datetime import datetime
+
+now = datetime.now()
 
 logging.basicConfig(level=logging.INFO)
 import re
@@ -17,6 +21,8 @@ def _news_scraper(news_site_uid):
     host = config()['news_sites'][news_site_uid]['url']
 
     logging.info('Beginning scraper for {}'.format(host))
+    logging.info('Finding links in homepage...')
+
     homepage = news.HomePage(news_site_uid, host)
 
     articles = []
@@ -26,9 +32,24 @@ def _news_scraper(news_site_uid):
         if article:
             logger.info('Article fetched!')
             articles.append(article)
-            print(article.title)
+            print(article)
 
-    print(len(articles))
+    _save_articles(news_site_uid, articles)
+
+
+
+def _save_articles(news_site_uid, articles):
+    csv_headers = list(filter(lambda property: not property.startswith('_'), dir(articles[0])))
+    out_file_name = '{news_site_uid}_{datetime}_articles.csv'.format(news_site_uid=news_site_uid, datetime=now.strftime('%Y_%m_%d'))
+        
+    
+    with open(out_file_name, mode='w+', encoding="utf-8") as f:
+        writer = csv.writer(f)
+        writer.writerow(csv_headers)
+        for article in articles:
+            row = [str(getattr(article, prop)) for prop in csv_headers]
+            writer.writerow(row)
+    
 
 def _fetch_article(news_site_uid, host, link):
     logger.info('Start fetching article at {}'.format(link))
@@ -49,9 +70,9 @@ def _build_link(host, link):
     if is_well_formed_link.match(link):
         return link
     elif is_root_path.match(link):
-        return '{}{}'.format(host, link)
+        return '{host}{url}'.format(host=host, url=link)
     else:
-        return '{host}/{uri}'.format(host=host, uri=link)
+        return '{host}/{url}'.format(host=host, url=link)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
