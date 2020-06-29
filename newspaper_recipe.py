@@ -75,6 +75,7 @@ def _remove_new_lines_from_body(df):
                       .apply(lambda row: row['body'], axis=1)
                       .apply(lambda body: list(body))
                       .apply(lambda letters: list(map(lambda letter: letter.replace('\n', ' '), letters)))
+                      .apply(lambda letters: list(map(lambda letter: letter.replace('\r', ''),letters)))
                       .apply(lambda letters: ''.join(letters))
                       )
 
