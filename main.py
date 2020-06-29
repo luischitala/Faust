@@ -33,7 +33,7 @@ def _news_scraper(news_site_uid):
             logger.info('Article fetched!')
             articles.append(article)
             # print(article)
-            break
+            
 
     _save_articles(news_site_uid, articles)
 
