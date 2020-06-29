@@ -50,6 +50,16 @@ class ArticlePage(NewsPage):
         return result[0].text if len(result) else ''    
     
     @property
+    def article_author(self):
+        result = self._select(self._queries['article_author'])
+        return result[0].text if len(result) else ''   
+    
+    @property
+    def article_date(self):
+        result = self._select(self._queries['article_date'])
+        return result[0].text if len(result) else ''   
+
+    @property
     def body(self):
         result = self._select(self._queries['article_body'])
         return result[0].text if len(result) else ''

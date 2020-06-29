@@ -8,13 +8,26 @@ news_sites:
         elpais:
           url: https://elpais.com
           queries:
-            homepage_article_links: '.articulo-titulo a'
-            article_body: '.articulo-cuerpo'
-            article_title: '.articulo-titulo'
+            homepage_article_links: '.story_card h2 a'
+            article_body: '.a_b p'
+            article_title: '.a_hg h1'
+            article_author: '.a_aut a'
         eltiempo:
           url: https://eltiempo.com
           queries:
             homepage_article_links: '.title-container a'
             article_body: '.contenido'
             article_title: '.titulo'
+            article_author: '.autor span'
+            article_date: '.fecha-publicacion-bk span'
+
+        lemonde:
+          url: https://www.lemonde.fr
+          queries:
+            homepage_article_links: '.article a'
+            article_body: '.article__content p'
+            article_title: '.article__heading h1'
+            article_author: '.meta__author a'
+            article_date: '.meta__date'
+            
       
