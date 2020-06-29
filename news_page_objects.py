@@ -65,6 +65,11 @@ class ArticlePage(NewsPage):
         return result[0].text if len(result) else ''
 
     @property
+    def article_location(self):
+        result = self._select(self._queries['article_location'])
+        return result[0].text if len(result) else ''
+
+    @property
     def url(self):
         return self._url
 
