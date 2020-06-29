@@ -1,6 +1,9 @@
 import argparse
 import hashlib
 import logging
+import nltk
+from nltk.corpus import stopwords
+stop_words = set(stopwords.words('spanish'))
 
 logging.basicConfig(level=logging.INFO)
 from urllib.parse import urlparse
@@ -19,6 +22,9 @@ def main(filename):
     df = _fill_missing_titles(df)
     df = _generate_uids_for_rows(df)
     df = _remove_new_lines_from_body(df)
+    df = _remove_void_columns(df)
+    df['n_tokens_title'] = _tokenize_column(df, 'title')
+    df['n_tokens_body'] = _tokenize_column(df, 'body')
 
     return df
 
@@ -81,6 +87,23 @@ def _remove_new_lines_from_body(df):
 
     df['body'] = strippped_body
     return df
+
+def _remove_void_columns(df):
+    logger.info('Removing optional void columns')
+
+    df = df.drop(['article_date', 'article_author', 'article_location'], axis=1)
+
+    return df
+
+def _tokenize_column(df, column_name):
+    return(df 
+                .dropna()
+                .apply(lambda row: nltk.word_tokenize(row[column_name]), axis = 1)
+                .apply(lambda tokens: list(filter(lambda token: token.isalpha(), tokens)))
+                .apply(lambda tokens: list(map(lambda token: token.lower(), tokens)))
+                .apply(lambda word_list: list(filter(lambda word: word not in stop_words, word_list)))
+                .apply(lambda valid_word_list: len(valid_word_list))
+          )
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
