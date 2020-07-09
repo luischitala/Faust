@@ -23,6 +23,7 @@ def main(filename):
     df = _fill_missing_titles(df)
     df = _generate_uids_for_rows(df)
     df = _remove_new_lines_from_body(df)
+    df = _remove_void_columns(df)
     df = _tokenize_column(df, 'title')
     df = _tokenize_column(df, 'body')
     df = _remove_duplicate_entries(df, 'title')
@@ -98,6 +99,13 @@ def _remove_new_lines_from_body(df):
                     )
 
     df['body'] = stripped_body
+
+    return df
+
+def _remove_void_columns(df):
+    logger.info('Removing optional void columns')
+
+    df = df.drop(['article_date', 'article_author', 'article_location'], axis=1)
 
     return df
 
