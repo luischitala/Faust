@@ -5,7 +5,7 @@ import datetime
 
 
 logger = logging.getLogger(__name__)
-news_sites_uids = ['eluniversal']
+news_sites_uids = ['eluniversal','lemonde']
 
 
 def main():
